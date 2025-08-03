@@ -1,9 +1,11 @@
 package com.thirty
 
+import android.os.Bundle
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.fabricEnabled
 import com.facebook.react.defaults.DefaultReactActivityDelegate
+import expo.modules.devlauncher.DevLauncherController
 
 class MainActivity : ReactActivity() {
 
@@ -17,6 +19,16 @@ class MainActivity : ReactActivity() {
    * Returns the instance of the [ReactActivityDelegate]. We use [DefaultReactActivityDelegate]
    * which allows you to enable New Architecture with a single boolean flags [fabricEnabled]
    */
-  override fun createReactActivityDelegate(): ReactActivityDelegate =
-      DefaultReactActivityDelegate(this, mainComponentName, fabricEnabled)
+  override fun createReactActivityDelegate(): ReactActivityDelegate {
+      return DevLauncherController.wrapReactActivityDelegate(
+          this,
+          { DefaultReactActivityDelegate(this, mainComponentName, fabricEnabled) }
+      )
+  }
+    
+  override fun onSaveInstanceState(outState: Bundle) {
+    super.onSaveInstanceState(outState)
+    // Remove this line if it causes issues, but it's often needed for dev client
+    outState.clear()
+  }
 }
